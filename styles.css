@@ -169,3 +169,150 @@ footer {
   color: #555;
   box-shadow: 0 -1px 3px rgba(0,0,0,0.1);
 }
+
+/* --- Enhanced styling for Level 1 UI --- */
+
+/* Update silhouette with a taller body and arms */
+#silhouette {
+  width: 200px;
+  height: 380px;
+  margin-bottom: 1rem;
+  background: url('data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22200%22%20height%3D%22400%22%20viewBox%3D%220%200%20200%20400%22%3E%3Ccircle%20cx%3D%22100%22%20cy%3D%2240%22%20r%3D%2230%22%20fill%3D%22%23e0e0e0%22/%3E%3Crect%20x%3D%2250%22%20y%3D%2280%22%20width%3D%22100%22%20height%3D%22120%22%20rx%3D%2210%22%20fill%3D%22%23e0e0e0%22/%3E%3Crect%20x%3D%220%22%20y%3D%22120%22%20width%3D%2260%22%20height%3D%2220%22%20rx%3D%2210%22%20fill%3D%22%23e0e0e0%22/%3E%3Crect%20x%3D%22140%22%20y%3D%22120%22%20width%3D%2060%22%20height%3D%2020%22%20rx%3D%2210%22%20fill%3D%22%23e0e0e0%22/%3E%3Crect%20x%3D%2265%22%20y%3D%22220%22%20width%3D%2030%22%20height%3D%20120%22%20rx%3D%205%22%20fill%3D%22%23e0e0e0%22/%3E%3Crect%20x%3D%22105%22%20y%3D%22220%22%20width%3D%2030%22%20height%3D%20120%22%20rx%3D%205%22%20fill%3D%22%23e0e0e0%22/%3E%3C/svg%3E') center no-repeat;
+  background-size: contain;
+}
+
+/* Larger target areas with rounded corners and dashed borders */
+.target-area {
+  width: 80%;
+  border-radius: 8px;
+  border: 2px dashed #bbb;
+}
+.target-area.head { top: 4%; height: 18%; }
+.target-area.body { top: 28%; height: 26%; }
+.target-area.legs { top: 58%; height: 20%; }
+.target-area.feet { bottom: 4%; height: 18%; }
+
+/* Highlight target on drag over */
+.target-area.hovered {
+  background: rgba(0, 119, 204, 0.1);
+  border-color: #0077cc;
+}
+
+/* Header for play area */
+.play-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+.play-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+}
+.reset-btn {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 8px;
+  background: #e0f3ff;
+  color: #0077cc;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.reset-btn:hover {
+  background: #c4e7ff;
+}
+
+/* Items area header and progress */
+.items-header {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+.items-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+.progress-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+#progress-container {
+  flex: 1;
+  height: 4px;
+  background: #e6eef5;
+  border-radius: 2px;
+}
+#progress-bar {
+  height: 100%;
+  width: 0%;
+  background: #0077cc;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+/* Items area layout and grid */
+#items-area {
+  flex: 1 1 300px;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+}
+.items-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  width: 100%;
+}
+
+/* Individual item styling */
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  padding: 1rem;
+  height: 120px;
+  color: #555;
+  font-size: 1.5rem;
+  cursor: grab;
+}
+.item.dragging {
+  opacity: 0.5;
+}
+.item .icon {
+  font-size: 2rem;
+  color: #5a6570;
+}
+.item .label {
+  margin-top: 0.25rem;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+/* Specific colors for each item type */
+.item.head { background: #fff4c7; }
+.item.body { background: #cfe5ff; }
+.item.legs { background: #e2d7ff; }
+.item.feet { background: #d2f2e5; }
+
+/* Override bottom reset button styling to match the header reset button */
+#reset-button {
+  background: #e0f3ff;
+  color: #0077cc;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  border: none;
+  cursor: pointer;
+}
+#reset-button:hover {
+  background: #c4e7ff;
+}
+
