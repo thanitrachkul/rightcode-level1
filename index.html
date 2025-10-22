@@ -13,7 +13,12 @@
     <p class="subtitle">ลากไอเท็มมาวางบนตัวหุ่นให้ถูกตำแหน่ง</p>
   </header>
   <main>
+    <!-- Play area (left side) -->
     <section id="play-area">
+      <div class="play-header">
+        <span class="play-title">พื้นที่เล่น</span>
+        <button id="reset-button-top" class="reset-btn">เริ่มใหม่</button>
+      </div>
       <div id="silhouette" class="target" data-type="head">
         <div class="target-area head" data-type="head"></div>
         <div class="target-area body" data-type="body"></div>
@@ -22,34 +27,44 @@
       </div>
       <div id="instruction">เคล็ดลับ: ลากไอเท็มมาวางให้ตรงตำแหน่ง</div>
     </section>
+    <!-- Items area (right side) -->
     <section id="items-area">
-      <div class="item" draggable="true" data-type="head">
-        <div class="icon">🎩</div>
-        <span class="label">หมวก</span>
+      <div class="items-header">
+        <span class="items-title">ลากไอเท็มมาวางให้ถูกตำแหน่ง</span>
+        <div class="progress-wrapper">
+          <span id="progress-label">ความคืบหน้า</span>
+          <div id="progress-container"><div id="progress-bar"></div></div>
+        </div>
       </div>
-      <div class="item" draggable="true" data-type="body">
-        <div class="icon">👕</div>
-        <span class="label">เสื้อ</span>
-      </div>
-      <div class="item" draggable="true" data-type="legs">
-        <div class="icon">👖</div>
-        <span class="label">กางเกง</span>
-      </div>
-      <div class="item" draggable="true" data-type="feet">
-        <div class="icon">👟</div>
-        <span class="label">รองเท้า</span>
+      <div class="items-grid">
+        <div class="item head" draggable="true" data-type="head">
+          <div class="icon">🎩</div>
+          <span class="label">หมวก</span>
+        </div>
+        <div class="item body" draggable="true" data-type="body">
+          <div class="icon">👕</div>
+          <span class="label">เสื้อ</span>
+        </div>
+        <div class="item legs" draggable="true" data-type="legs">
+          <div class="icon">👖</div>
+          <span class="label">กางเกง</span>
+        </div>
+        <div class="item feet" draggable="true" data-type="feet">
+          <div class="icon">👟</div>
+          <span class="label">รองเท้า</span>
+        </div>
       </div>
     </section>
-    <!-- Overlay is hidden by default via CSS rather than the `hidden` attribute. -->
+    <!-- Success overlay (hidden by default) -->
     <div id="success-overlay">
       <div class="message">
         <h2>ผ่านด่านแล้ว!</h2>
-        <button id="reset-button">เริ่มใหม่</button>
+        <button id="reset-button" class="reset-btn">เริ่มใหม่</button>
       </div>
     </div>
   </main>
   <footer>
-    <p>เป้าหมาย: จับคู่ถูกต้อง (ตรวจตรา if–then)</p>
+    <p>เป้าหมาย: จับคู่ถูกต้อง (ตรวจรา if–then)</p>
   </footer>
 </body>
 </html>
