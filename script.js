@@ -11,12 +11,16 @@ document.addEventListener('DOMContentLoaded', () => {
   let placedCount = 0;
 
   // Update progress bar width based on placed items
-  function updateProgress() {
+  function updateProgress()  {
+
+    
     const totalItems = items.length;
-    const percent = (placedCount / totalItems) * 100;
-    if (progressBar) {
-      progressBar.style.width = `${percent}%`;
-    }
+  const percent = (placedCount / totalItems) * 100;
+  if (progressBar) {
+    progressBar.style.width = percent + '%';
+  }
+
+      
   }
 
   items.forEach(item => {
