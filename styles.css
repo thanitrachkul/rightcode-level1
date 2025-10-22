@@ -1,0 +1,171 @@
+/* Basic reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: sans-serif;
+  line-height: 1.6;
+  background: #f3f7fa;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  text-align: center;
+  padding: 1rem;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+header h1 {
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+header .subtitle {
+  font-size: 0.9rem;
+  color: #555;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+#play-area {
+  flex: 1 1 300px;
+  max-width: 350px;
+  min-width: 250px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+#silhouette {
+  position: relative;
+  width: 200px;
+  height: 300px;
+  margin-bottom: 1rem;
+  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 128"><path fill="%23e0e0e0" d="M32 0c10.493 0 19 8.507 19 19s-8.507 19-19 19-19-8.507-19-19S21.507 0 32 0zm0 48c21.8 0 40 15.2 40 40v40H-8V88c0-24.8 18.2-40 40-40z"/></svg>') center no-repeat;
+  background-size: contain;
+}
+
+.target-area {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 20%;
+  border: 2px dashed #ccc;
+  border-radius: 4px;
+}
+.target-area.head { top: 5%; height: 18%; }
+.target-area.body { top: 30%; height: 22%; }
+.target-area.legs { top: 58%; height: 22%; }
+.target-area.feet { bottom: 5%; height: 16%; }
+
+#instruction {
+  font-size: 0.9rem;
+  color: #777;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+#items-area {
+  flex: 1 1 300px;
+  max-width: 350px;
+  min-width: 250px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-content: flex-start;
+  gap: 1rem;
+}
+.item {
+  width: 45%;
+  padding: 0.5rem;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  background: #f9fbfd;
+  text-align: center;
+  cursor: grab;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 1.25rem;
+}
+.item.dragging {
+  opacity: 0.5;
+}
+/* Success overlay */
+#success-overlay {
+  /* The overlay is hidden by default via `display: none`. It will be set to
+     `flex` by the script when all items are placed correctly. */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+#success-overlay .message {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+#success-overlay h2 {
+  margin-bottom: 1rem;
+}
+#reset-button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  background: #0077cc;
+  color: #fff;
+  cursor: pointer;
+}
+#reset-button:hover {
+  background: #005fa3;
+}
+
+/* Shake animation for wrong placement */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+}
+.shake {
+  animation: shake 0.5s ease;
+}
+
+footer {
+  padding: 1rem;
+  text-align: center;
+  background: #fff;
+  font-size: 0.8rem;
+  color: #555;
+  box-shadow: 0 -1px 3px rgba(0,0,0,0.1);
+}

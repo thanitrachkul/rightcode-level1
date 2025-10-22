@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RightCode • Level 1</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <header>
+    <h1>RightCode • Level 1 — เกมแต่งตัวให้ถูกต้อง</h1>
+    <p class="subtitle">ลากไอเท็มมาวางบนตัวหุ่นให้ถูกตำแหน่ง</p>
+  </header>
+  <main>
+    <section id="play-area">
+      <div id="silhouette" class="target" data-type="head">
+        <div class="target-area head" data-type="head"></div>
+        <div class="target-area body" data-type="body"></div>
+        <div class="target-area legs" data-type="legs"></div>
+        <div class="target-area feet" data-type="feet"></div>
+      </div>
+      <div id="instruction">เคล็ดลับ: ลากไอเท็มมาวางให้ตรงตำแหน่ง</div>
+    </section>
+    <section id="items-area">
+      <div class="item" draggable="true" data-type="head">
+        <div class="icon">🎩</div>
+        <span class="label">หมวก</span>
+      </div>
+      <div class="item" draggable="true" data-type="body">
+        <div class="icon">👕</div>
+        <span class="label">เสื้อ</span>
+      </div>
+      <div class="item" draggable="true" data-type="legs">
+        <div class="icon">👖</div>
+        <span class="label">กางเกง</span>
+      </div>
+      <div class="item" draggable="true" data-type="feet">
+        <div class="icon">👟</div>
+        <span class="label">รองเท้า</span>
+      </div>
+    </section>
+    <!-- Overlay is hidden by default via CSS rather than the `hidden` attribute. -->
+    <div id="success-overlay">
+      <div class="message">
+        <h2>ผ่านด่านแล้ว!</h2>
+        <button id="reset-button">เริ่มใหม่</button>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <p>เป้าหมาย: จับคู่ถูกต้อง (ตรวจตรา if–then)</p>
+  </footer>
+</body>
+</html>
