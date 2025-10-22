@@ -316,3 +316,31 @@ footer {
   background: #c4e7ff;
 }
 
+
+
+/* Style items when placed into target area */
+.target-area .item {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  cursor: default;
+}
+
+.target-area .item .label {
+  display: none;
+}
+
+.target-area .item .icon {
+  font-size: 2.5rem;
+  color: #444;
+}
+
+/* Add a subtle dashed border to silhouette for better visibility */
+#silhouette {
+  border: 2px dashed #cbd5e1;
+}
