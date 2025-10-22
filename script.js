@@ -5,7 +5,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const targets = document.querySelectorAll('.target-area');
   const overlay = document.getElementById('success-overlay');
   const resetButton = document.getElementById('reset-button');
+  const resetButtonTop = document.getElementById('reset-button-top');
+  const progressBar = document.getElementById('progress-bar');
+  const itemsGrid = document.querySelector('#items-area .items-grid');
   let placedCount = 0;
+
+  // Update progress bar width based on placed items
+  function updateProgress() {
+    const totalItems = items.length;
+    const percent = (placedCount / totalItems) * 100;
+    if (progressBar) {
+      progressBar.style.width = `${percent}%`;
+    }
+  }
 
   items.forEach(item => {
     item.addEventListener('dragstart', e => {
@@ -35,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dragged.style.cursor = 'default';
         dragged.setAttribute('draggable', 'false');
         placedCount++;
+        updateProgress();
         checkCompletion();
       } else {
         // Incorrect placement feedback
@@ -46,19 +59,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function checkCompletion() {
     if (placedCount === items.length) {
-      // Show the success overlay by setting display to flex (see CSS)
       overlay.style.display = 'flex';
     }
   }
 
-  resetButton.addEventListener('click', () => {
-    // Reset game
+  // Reset the game to the initial state
+  function resetGame() {
     items.forEach(item => {
       item.setAttribute('draggable', 'true');
-      document.getElementById('items-area').appendChild(item);
+      itemsGrid.appendChild(item);
+      item.style.cursor = 'grab';
     });
     placedCount = 0;
-    // Hide the success overlay
+    updateProgress();
     overlay.style.display = 'none';
-  });
+  }
+
+  resetButton.addEventListener('click', resetGame);
+  if (resetButtonTop) {
+    resetButtonTop.addEventListener('click', resetGame);
+  }
 });
