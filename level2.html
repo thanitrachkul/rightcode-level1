@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RightCode • Level 2 — เรียงบล็อกตัวเลข</title>
+  <!-- Tailwind (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { theme: { extend: { colors: { slatebg: { 50:'#f8fafc', 100:'#f1f5f9' } } } } };
+  </script>
+  <!-- React 18 (CDN) + Babel -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    .card { box-shadow: 0 10px 25px rgba(15,23,42,.07); }
+    .stack-slot { border:2px dashed rgba(100,116,139,.6); }
+    .stack-slot.hover { border-color: rgb(14,165,233); background: rgba(56,189,248,.08); }
+    .stack-slot.error { border-color: rgb(239,68,68); background: rgba(248,113,113,.12); }
+    .num-block { box-shadow: 0 6px 14px rgba(2,6,23,.08); }
+    .wobble { animation: wobble .22s linear; }
+    @keyframes wobble {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      50% { transform: translateX(6px); }
+      100% { transform: translateX(0); }
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-b from-white to-slatebg-100 text-slate-900 p-6">
+  <div id="app" class="max-w-6xl mx-auto"></div>
+  <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    // Icons for counts
+    const IconCircle   = () => <circle cx="12" cy="12" r="10" />;
+    const IconTriangle = () => <polygon points="12,2 22,22 2,22" />;
+    const IconSquare   = () => <rect x="3" y="3" width="18" height="18" rx="3" />;
+    const IconPentagon = () => <polygon points="12,2 22,9 18,22 6,22 2,9" />;
+    const IconHex      = () => <polygon points="6,2 18,2 24,12 18,22 6,22 0,12" />;
+    const IconStar     = () => <path d="M12 2l2.9 6.2 6.8.6-5 4.2 1.6 6.8-6.3-3.8-6.3 3.8 1.6-6.8-5-4.2 6.8-.6z"/>;
+    const IconDiamond  = () => <polygon points="12,1 23,12 12,23 1,12" />;
+    const IconHeart    = () => <path d="M12 21s-7.5-4.5-9-9c-1.2-3.6 1.2-6 4-6 2 0 3.2 1 5 3 1.8-2 3-3 5-3 2.8 0 5.2 2.4 4 6-1.5 4.5-9 9-9 9z"/>;
+    const IconMoon     = () => <path d="M16 2a9 9 0 1 0 6 15A10 10 0 0 1 16 2z" />;
+    const IconPlus     = () => <path d="M11 3h2v8h8v2h-8v8h-2v-8H3v-2h8z"/>;
+
+    const ICONS = {
+      1: IconStar, 2: IconCircle, 3: IconTriangle, 4: IconSquare, 5: IconPentagon,
+      6: IconHex, 7: IconDiamond, 8: IconHeart, 9: IconMoon, 10: IconPlus
+    };
+
+    // Colors for numbers
+    const COLORS = {
+      1: { bg: 'bg-amber-300', text: 'text-amber-900' },
+      2: { bg: 'bg-sky-300',   text: 'text-sky-900' },
+      3: { bg: 'bg-indigo-300', text:'text-indigo-900' },
+      4: { bg: 'bg-emerald-300', text:'text-emerald-900' },
+      5: { bg: 'bg-orange-300', text:'text-orange-900' },
+      6: { bg: 'bg-teal-300',  text:'text-teal-900' },
+      7: { bg: 'bg-pink-300',  text:'text-pink-900' },
+      8: { bg: 'bg-violet-300', text:'text-violet-900' },
+      9: { bg: 'bg-rose-300', text:'text-rose-900' },
+      10:{ bg: 'bg-lime-300', text:'text-lime-900' }
+    };
+
+    function NumberBlock({ n, used }) {
+      const color = COLORS[n];
+      const Icon = ICONS[n];
+      return (
+        <div
+          draggable={!used}
+          onDragStart={(e) => e.dataTransfer.setData('text/plain', String(n))}
+          className={[
+            'num-block select-none cursor-grab active:cursor-grabbing',
+            'rounded-xl border bg-white p-3 flex items-center gap-3',
+            used ? 'opacity-40 cursor-not-allowed' : ''
+          ].join(' ')}
+        >
+          <div className={['w-10 h-10 rounded-lg font-extrabold flex items-center justify-center', color.bg, color.text].join(' ')}>
+            {n}
+          </div>
+          <div className="flex-1">
+            <div className="text-sm font-semibold">เลข {n}</div>
+            <div className="mt-1 flex flex-wrap gap-1">
+              {Array.from({ length: n }).map((_, i) => (
+                <svg key={i} viewBox="0 0 24 24" className="w-4 h-4 fill-slate-600">
+                  <Icon />
+                </svg>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function Slot({ index, value, onDropHere, onDragOverSlot, hover, isError }) {
+      const color = value ? COLORS[value] : null;
+      return (
+        <div
+          onDragOver={(e) => { e.preventDefault(); onDragOverSlot(index); }}
+          onDrop={(e) => onDropHere(e, index)}
+          className={[
+            'stack-slot rounded-xl h-14 flex items-center justify-center relative transition-colors',
+            hover ? 'hover' : '',
+            isError ? 'error' : ''
+          ].join(' ')}
+        >
+          {value ? (
+            <div className={['absolute inset-1 rounded-lg flex items-center justify-center border text-slate-700 font-bold', color.bg, color.text].join(' ')}>
+              {value}
+            </div>
+          ) : (
+            <span className="text-slate-400 text-sm">ช่องที่ {index + 1}</span>
+          )}
+        </div>
+      );
+    }
+
+    function Level2() {
+      const [palette, setPalette] = useState([]);
+      const [placed, setPlaced] = useState(Array(10).fill(null));
+      const [hoverIdx, setHoverIdx] = useState(null);
+      const [errorSlot, setErrorSlot] = useState(null);
+      const [errorMsg, setErrorMsg] = useState('');
+
+      useEffect(() => {
+        shuffle();
+      }, []);
+
+      function shuffle() {
+        const arr = Array.from({ length: 10 }, (_, i) => i + 1);
+        arr.sort(() => Math.random() - 0.5);
+        setPalette(arr);
+        setPlaced(Array(10).fill(null));
+        setHoverIdx(null);
+        setErrorSlot(null);
+        setErrorMsg('');
+      }
+
+      const allCorrect = useMemo(() => placed.every((v, i) => v === i + 1), [placed]);
+
+      function reset() {
+        shuffle();
+      }
+
+      function onDropHere(e, idx) {
+        const data = e.dataTransfer.getData('text/plain');
+        const n = parseInt(data, 10);
+        if (!n || isNaN(n)) return;
+        setHoverIdx(null);
+        if (n === idx + 1) {
+          const next = placed.slice();
+          const prevIndex = next.findIndex((v) => v === n);
+          if (prevIndex !== -1) next[prevIndex] = null;
+          next[idx] = n;
+          setPlaced(next);
+          setErrorSlot(null);
+          setErrorMsg('');
+        } else {
+          setErrorSlot(idx);
+          setErrorMsg('คุณวางผิดตำแหน่ง! ลองใหม่อีกครั้ง');
+          setTimeout(() => {
+            setErrorSlot(null);
+            setErrorMsg('');
+          }, 1500);
+        }
+      }
+
+      function onDragOverSlotFn(idx) {
+        setHoverIdx(idx);
+      }
+
+      return (
+        <div className="space-y-6">
+          <header className="flex justify-between items-center">
+            <div>
+              <h1 className="text-2xl font-bold">RightCode • Level 2</h1>
+              <p className="opacity-80 text-sm">เกมเรียงบล็อกตัวเลข 1–10 (แนวตั้ง) – ฝึกบล็อกโค้ดดิ้ง</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm">ความคืบหน้า</span>
+              <div className="w-40 h-2 bg-slate-200 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-sky-500 transition-all"
+                  style={{ width: `${(placed.filter(Boolean).length / 10) * 100}%` }}
+                />
+              </div>
+            </div>
+          </header>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="card rounded-2xl bg-white p-4">
+              <div className="mb-3 flex justify-between items-center">
+                <h2 className="font-semibold">พื้นที่เล่น</h2>
+                <button onClick={reset} className="px-3 py-1 rounded-lg bg-slate-100 hover:bg-slate-200">
+                  เริ่มใหม่
+                </button>
+              </div>
+              {errorMsg && <p className="text-red-500 text-sm mb-2 text-center">{errorMsg}</p>}
+              <div className={['rounded-xl p-3 bg-slate-50 mx-auto max-w-xs', errorSlot !== null ? 'wobble' : ''].join(' ')}>
+                <div className="grid gap-2">
+                  {placed.map((v, idx) => (
+                    <Slot
+                      key={idx}
+                      index={idx}
+                      value={v}
+                      onDropHere={onDropHere}
+                      onDragOverSlot={onDragOverSlotFn}
+                      hover={hoverIdx === idx}
+                      isError={errorSlot === idx}
+                    />
+                  ))}
+                </div>
+                <p className="text-center text-sm mt-3 opacity-80">เคล็ดลับ: ลากบล็อกจากด้านขวามาวางเรียงช่องที่ 1 → 10</p>
+              </div>
+            </div>
+            <div className="card rounded-2xl bg-white p-4">
+              <h2 className="font-semibold mb-3 text-center">ลากบล็อกตัวเลขมาวางให้ถูกตำแหน่ง</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {palette.map((n) => (
+                  <NumberBlock key={n} n={n} used={placed.includes(n)} />
+                ))}
+              </div>
+            </div>
+          </div>
+          {allCorrect && (
+            <div className="fixed inset-0 bg-black/30 flex items-center justify-center">
+              <div className="bg-white rounded-3xl p-6 shadow-xl text-center max-w-sm">
+                <h3 className="text-2xl font-bold mb-2">เก่งมาก! ✓</h3>
+                <p className="mb-4 opacity-80">เรียงตัวเลขถูกต้อง 1‑10 ครบแล้ว</p>
+                <div className="flex gap-3 justify-center">
+                  <button className="px-4 py-2 bg-slate-100 rounded-lg" onClick={reset}>
+                    เล่นอีกครั้ง
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('app')).render(<Level2 />);
+  </script>
+</body>
+</html>
